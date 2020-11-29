@@ -1,0 +1,8 @@
+*.it
+*.mod
+*.MOD
+*.xm
+*.s3m
+*.gdm
+nohup.out
+unwanted/

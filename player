@@ -1,0 +1,78 @@
+#!/bin/bash
+
+echo -e "\e[32m===== Humaid's Mod Player =====\e[39m"
+echo -e "\e[90mPress 'h' for help.\e[39m"
+
+function clear() {
+	echo -ne "\b \b"
+}
+
+function clear_n() {
+	for ((n=0;n<$1;n++)); do
+		echo -ne "\b \b"
+	done
+}
+
+paused=false
+
+list=$(ls ./*.mod ./*.xm ./*.s3m ./*.gdm ./*.it)
+shufld=$(echo -e "$list" | shuf)
+if [[ -n $1 ]]; then
+	shufld="$1 $shufld"
+fi
+for f in $shufld
+do
+	echo -e "\e[93mPlaying $f\e[39m"
+	nohup ffplay -autoexit -nodisp "$f" > /dev/null 2>&1 &
+	pid=$!
+	while kill -0 $pid > /dev/null 2>&1; do
+		read -r -n 1 -t 0.1 key
+		if [[ $key = n && $paused = false ]]
+		then
+			clear
+			kill $pid
+		elif [[ $key = q ]]
+		then
+			clear
+			kill $pid
+			exit
+		elif [[ $key = p &&  $paused = false ]]
+		then
+			clear
+			kill -STOP $pid
+			paused=true
+			echo -en "\e[91m=== PAUSED ===\e[39m"
+		elif [[ $key = c &&  $paused = true ]]
+		then
+			clear
+			clear_n 14
+			kill -CONT $pid
+			paused=false
+		elif [[ $key = \? && $paused = false ]]
+		then
+			clear
+			echo -e "\e[93mPlaying $f\e[39m"
+		elif [[ $key = d && $paused = false ]]
+		then
+			clear
+			mv -i "$f" ./unwanted/
+			kill $pid
+			echo "File moved to ./unwanted"
+		elif [[ $key = h && $paused = false ]]
+		then
+			clear
+			echo -e "\e[90m=== Commands ==="
+			echo -e "n\tNext music"
+			echo -e "p\tPause"
+			echo -e "c\tContinue"
+			echo -e "d\tDelete (move to ./unwanted)"
+			echo -e "?\tShow now playing"
+			echo -e "q\tQuit"
+			echo -ne "\e[39m"
+
+		elif [[ -n $key ]]
+		then
+			clear
+		fi
+	done
+done
