@@ -55,6 +55,7 @@ do
 		elif [[ $key = d && $paused = false ]]
 		then
 			clear
+			mkdir -p ./unwanted 2>/dev/null
 			mv -i "$f" ./unwanted/
 			kill $pid
 			echo "File moved to ./unwanted"
