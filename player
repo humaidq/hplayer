@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo -e "\e[32m===== Humaid's Mod Player =====\e[39m"
 echo -e "\e[90mPress 'h' for help.\e[39m"
@@ -15,7 +15,7 @@ function clear_n() {
 
 paused=false
 
-list=$(ls ./*.mod ./*.xm ./*.s3m ./*.gdm ./*.it)
+list=$(ls ./*.mod ./*.xm ./*.s3m ./*.gdm ./*.it 2>/dev/null)
 shufld=$(echo -e "$list" | shuf)
 if [[ -n $1 ]]; then
 	shufld="$1 $shufld"
